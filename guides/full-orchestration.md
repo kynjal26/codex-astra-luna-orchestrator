@@ -10,10 +10,10 @@ The topology is:
 
 ```text
 Sol root (medium)
-├── Luna explorer (max)
-├── Luna worker (max)
-├── Luna tester (max)
-├── Luna researcher (max)
+├── Luna explorer (high)
+├── Luna worker (high)
+├── Luna tester (high)
+├── Luna researcher (high)
 └── Sol reviewer (low)
 ```
 
@@ -28,7 +28,7 @@ model_reasoning_effort = "medium"
 enabled = true
 max_concurrent_threads_per_session = 4
 default_subagent_model = "gpt-5.6-luna"
-default_subagent_reasoning_effort = "max"
+default_subagent_reasoning_effort = "high"
 ```
 
 For the named roles, use these model settings in the corresponding files under
@@ -37,7 +37,7 @@ For the named roles, use these model settings in the corresponding files under
 ```toml
 # explorer.toml, worker.toml, tester.toml, researcher.toml
 model = "gpt-5.6-luna"
-model_reasoning_effort = "max"
+model_reasoning_effort = "high"
 ```
 
 ```toml

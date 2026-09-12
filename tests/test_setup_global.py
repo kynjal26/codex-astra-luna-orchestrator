@@ -29,7 +29,7 @@ def run_setup(home: pathlib.Path, answers: str) -> subprocess.CompletedProcess[s
 class GlobalSetupTests(unittest.TestCase):
     def test_fresh_pro_and_plus_profiles(self) -> None:
         expectations = {
-            "pro": ('model = "gpt-5.6-sol"', 'model_reasoning_effort = "medium"', 'default_subagent_reasoning_effort = "max"'),
+            "pro": ('model = "gpt-5.6-sol"', 'model_reasoning_effort = "medium"', 'default_subagent_reasoning_effort = "high"'),
             "plus": ('model = "gpt-5.6-luna"', 'model_reasoning_effort = "max"', 'default_subagent_reasoning_effort = "medium"'),
         }
         for plan, expected in expectations.items():

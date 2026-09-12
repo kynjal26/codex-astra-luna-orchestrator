@@ -2,7 +2,7 @@
 
 A configurable Codex setup where GPT-5.6 Sol is the root/orchestrator and reviewer, while GPT-5.6 Luna is the default and pinned model for execution subagents.
 
-The installer asks which Codex plan you are on. Pro uses GPT-5.6 Sol at medium reasoning to orchestrate and GPT-5.6 Luna at max reasoning for execution subagents. Plus uses GPT-5.6 Luna at max reasoning to orchestrate and medium reasoning for execution subagents. Both plans retain the separate GPT-5.6 Sol reviewer at low reasoning.
+The installer asks which Codex plan you are on. Pro uses GPT-5.6 Sol at medium reasoning to orchestrate and GPT-5.6 Luna at high reasoning for execution subagents. Plus uses GPT-5.6 Luna at max reasoning to orchestrate and medium reasoning for execution subagents. Both plans retain the separate GPT-5.6 Sol reviewer at low reasoning.
 
 ## Layout
 
@@ -36,8 +36,8 @@ The installer asks which Codex plan you are on. Pro uses GPT-5.6 Sol at medium r
 | Role or setting | Plus | Pro |
 |---|---|---|
 | Orchestrator | GPT-5.6 Luna - max | GPT-5.6 Sol - medium |
-| Explorer, worker, tester, researcher | GPT-5.6 Luna - medium | GPT-5.6 Luna - max |
-| Default subagent | GPT-5.6 Luna - medium | GPT-5.6 Luna - max |
+| Explorer, worker, tester, researcher | GPT-5.6 Luna - medium | GPT-5.6 Luna - high |
+| Default subagent | GPT-5.6 Luna - medium | GPT-5.6 Luna - high |
 | Independent reviewer | GPT-5.6 Sol - low | GPT-5.6 Sol - low |
 | Concurrent subagent limit | 4 | 4 |
 
@@ -54,7 +54,7 @@ sandbox_mode = "workspace-write"
 enabled = true
 max_concurrent_threads_per_session = 4
 default_subagent_model = "gpt-5.6-luna"
-default_subagent_reasoning_effort = "max"
+default_subagent_reasoning_effort = "high"
 ```
 
 ### Plus - `profiles/plus/codex/config.toml`
@@ -81,7 +81,7 @@ configuration.
 
 Each role file is explicitly pinned to its intended model: Luna for explorer, worker, tester, and researcher; Sol for reviewer. This means changing only `default_subagent_model` will affect generic spawned agents, but not the named roles.
 
-The four Luna role files explicitly set `model_reasoning_effort = "max"` in the Pro profile and `"medium"` in the Plus profile. The reviewer keeps its explicit `low` effort in both.
+The four Luna role files explicitly set `model_reasoning_effort = "high"` in the Pro profile and `"medium"` in the Plus profile. The reviewer keeps its explicit `low` effort in both.
 
 When updating an existing installation, copy the role files along with `config.toml` from the selected profile. Replace `<plan>` below with `pro` or `plus`.
 

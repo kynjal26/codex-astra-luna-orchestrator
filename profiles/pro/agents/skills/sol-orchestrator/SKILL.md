@@ -16,11 +16,11 @@ Delegate bounded execution work to specialized subagents, then have the root int
 The expected default topology is:
 
 - root: GPT-5.6 Sol at medium reasoning
-- explorer: GPT-5.6 Luna at max reasoning
-- worker: GPT-5.6 Luna at max reasoning
-- tester: GPT-5.6 Luna at max reasoning
+- explorer: GPT-5.6 Luna at high reasoning
+- worker: GPT-5.6 Luna at high reasoning
+- tester: GPT-5.6 Luna at high reasoning
 - reviewer: GPT-5.6 Sol at low reasoning
-- researcher: GPT-5.6 Luna at max reasoning
+- researcher: GPT-5.6 Luna at high reasoning
 
 Use Luna for all routine subagent execution.
 
@@ -97,13 +97,13 @@ The root must not offload architectural ownership to a subagent.
 
 When spawning agents, use these models by default:
 
-- explorer: `gpt-5.6-luna` at `max` reasoning
-- worker: `gpt-5.6-luna` at `max` reasoning
-- tester: `gpt-5.6-luna` at `max` reasoning
-- researcher: `gpt-5.6-luna` at `max` reasoning
+- explorer: `gpt-5.6-luna` at `high` reasoning
+- worker: `gpt-5.6-luna` at `high` reasoning
+- tester: `gpt-5.6-luna` at `high` reasoning
+- researcher: `gpt-5.6-luna` at `high` reasoning
 - reviewer: `gpt-5.6-sol` at `low` reasoning
 
-The root keeps the Pro profile configuration from `.codex/config.toml`: GPT-5.6 Sol at medium reasoning. The role files in `.codex/agents/` explicitly set Luna reasoning to `max` and reviewer reasoning to `low`. Preserve those efforts when spawning agents unless the user requests a change. Do not change the root model from within a session.
+The root keeps the Pro profile configuration from `.codex/config.toml`: GPT-5.6 Sol at medium reasoning. The role files in `.codex/agents/` explicitly set Luna reasoning to `high` and reviewer reasoning to `low`. Preserve those efforts when spawning agents unless the user requests a change. Do not change the root model from within a session.
 
 For every delegated task:
 

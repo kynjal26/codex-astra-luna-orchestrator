@@ -446,7 +446,7 @@ function Merge-GlobalCodexConfig {
     if ($Plan -eq 'pro') {
         $rootValues.model = 'model = "gpt-5.6-sol"'
         $rootValues.model_reasoning_effort = 'model_reasoning_effort = "medium"'
-        $agentValues.default_subagent_reasoning_effort = 'default_subagent_reasoning_effort = "max"'
+        $agentValues.default_subagent_reasoning_effort = 'default_subagent_reasoning_effort = "high"'
     }
     else {
         $rootValues.model = 'model = "gpt-5.6-luna"'
