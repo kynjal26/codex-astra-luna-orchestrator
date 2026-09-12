@@ -5,7 +5,7 @@ faster orchestration are preferred.
 
 This is an optional root override for the [Plus profile](plus-plan.md),
 lowering its Luna root from `max` to `medium`. The installed Luna subagents
-remain at `medium` and the Astra reviewer at `low`. If you adopt this override,
+remain at `medium` and the Sol reviewer at `low`. If you adopt this override,
 update the installed skill's root-reasoning wording to match.
 
 Add or merge this into:

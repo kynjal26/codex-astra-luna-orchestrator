@@ -12,25 +12,11 @@ cat <<'BANNER'
 | / ___ \ ___) || | |  _ <  / ___ \     |
 |/_/   \_\____/ |_| |_| \_\/_/   \_\    |
 |                                       |
-|       O R C H E S T R A T O R         |
-|   Plan and orchestrate with Astra.    |
-|          Execute with Luna.           |
+|       S O L   O R C H E S T R A T O R |
+|      Plan with Sol. Execute with Luna. |
 +---------------------------------------+
 BANNER
-printf '%s\n' 'Interactive project setup'
-printf '%s' 'Target repository path: '
-IFS= read -r target_path || exit 1
-
-if [ -z "$target_path" ] || [ ! -d "$target_path" ]; then
-    printf 'Error: target must be an existing directory: %s\n' "${target_path:-<empty>}" >&2
-    exit 1
-fi
-
-target_dir=$(CDPATH= cd -- "$target_path" && pwd -P)
-if [ "$target_dir" = "$script_dir" ]; then
-    printf 'Error: target repository must be different from the setup source directory.\n' >&2
-    exit 1
-fi
+printf '%s\n' 'Interactive Codex setup'
 
 confirm() {
     prompt=$1
@@ -119,8 +105,8 @@ merge_conflicts() {
 
 select_plan() {
     printf '%s\n' 'Codex plan:'
-    printf '%s\n' '  1) Pro  - GPT-6 Astra orchestrates, GPT-5.6 Luna executes, GPT-6 Astra reviews'
-    printf '%s\n' '  2) Plus - GPT-5.6 Luna (max reasoning) orchestrates, GPT-5.6 Luna executes, GPT-6 Astra reviews'
+    printf '%s\n' '  1) Pro  - GPT-5.6 Sol orchestrates, GPT-5.6 Luna executes, GPT-5.6 Sol reviews'
+    printf '%s\n' '  2) Plus - GPT-5.6 Luna (max reasoning) orchestrates, GPT-5.6 Luna executes, GPT-5.6 Sol reviews'
 
     while :; do
         printf '%s' 'Select plan [1/2] (default 1): '
@@ -133,6 +119,25 @@ select_plan() {
             1|pro|PRO|Pro|'') plan=pro; return ;;
             2|plus|PLUS|Plus) plan=plus; return ;;
             *) printf '%s\n' 'Please answer 1 (Pro) or 2 (Plus).' ;;
+        esac
+    done
+}
+
+select_scope() {
+    printf '%s\n' 'Installation scope:'
+    printf '%s\n' '  1) Personal/global - available in every project for this user'
+    printf '%s\n' '  2) Project - install into one repository'
+
+    while :; do
+        printf '%s' 'Select scope [1/2] (default 1): '
+        if ! IFS= read -r answer; then
+            printf '\nSetup cancelled: input ended before setup was complete.\n' >&2
+            exit 1
+        fi
+        case "$answer" in
+            1|global|GLOBAL|Global|'') scope=global; return ;;
+            2|project|PROJECT|Project) scope=project; return ;;
+            *) printf '%s\n' 'Please answer 1 (global) or 2 (project).' ;;
         esac
     done
 }
@@ -156,6 +161,16 @@ copy_component() {
             fi
             instructions=$(cat "$source_path")
             existing_instructions=$(cat "$destination_path")
+            case "$existing_instructions" in
+                *'use the `astra-orchestrator` skill'*)
+                    temporary_file=$(mktemp "$target_dir/.AGENTS.md.solsetup.XXXXXX")
+                    sed 's/astra-orchestrator/sol-orchestrator/g' "$destination_path" > "$temporary_file"
+                    cp -p "$destination_path" "$destination_path.backup-$(date -u +%Y%m%dT%H%M%SZ)"
+                    mv "$temporary_file" "$destination_path"
+                    existing_instructions=$(cat "$destination_path")
+                    printf 'Migrated legacy Astra skill references in %s.\n' "$name"
+                    ;;
+            esac
             case "$existing_instructions" in
                 *"$instructions"*)
                     printf 'Skipped %s: instructions already present.\n' "$name"
@@ -213,8 +228,28 @@ copy_component() {
     component_installed=yes
 }
 
+scope=global
+select_scope
+
 plan=pro
 select_plan
+
+if [ "$scope" = global ]; then
+    sh "$script_dir/scripts/setup_global.sh" "$script_dir" "$plan"
+    exit 0
+fi
+
+printf '%s' 'Target repository path: '
+IFS= read -r target_path || exit 1
+if [ -z "$target_path" ] || [ ! -d "$target_path" ]; then
+    printf 'Error: target must be an existing directory: %s\n' "${target_path:-<empty>}" >&2
+    exit 1
+fi
+target_dir=$(CDPATH= cd -- "$target_path" && pwd -P)
+if [ "$target_dir" = "$script_dir" ]; then
+    printf 'Error: target repository must be different from the setup source directory.\n' >&2
+    exit 1
+fi
 
 installed=0
 for component in .codex .agents AGENTS.md; do
@@ -233,6 +268,18 @@ for component in .codex .agents AGENTS.md; do
         printf 'Skipped %s.\n' "$component"
     fi
 done
+
+legacy_project_skill=$target_dir/.agents/skills/astra-orchestrator
+if [ -d "$legacy_project_skill" ] && [ ! -L "$legacy_project_skill" ]; then
+    if confirm 'Archive the legacy project astra-orchestrator skill to prevent duplicate matching?' yes; then
+        legacy_backup=$target_dir/.agents/skill-backups/astra-orchestrator-$(date -u +%Y%m%dT%H%M%SZ)
+        mkdir -p "$(dirname "$legacy_backup")"
+        mv "$legacy_project_skill" "$legacy_backup"
+        printf 'Archived legacy project skill at %s\n' "$legacy_backup"
+    fi
+elif [ -L "$legacy_project_skill" ]; then
+    printf 'Legacy project skill is managed by a symbolic link and was not changed: %s\n' "$legacy_project_skill" >&2
+fi
 
 printf '\nSetup complete. %s component(s) installed in %s (plan: %s).\n' "$installed" "$target_dir" "$plan"
 printf '%s\n' 'See guides/ for optional Codex model and Fast-mode configurations.'

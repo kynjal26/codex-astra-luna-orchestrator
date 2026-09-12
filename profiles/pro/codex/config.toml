@@ -1,4 +1,4 @@
-# Codex: Astra orchestrator + Luna subagents
+# Codex: Sol orchestrator + Luna subagents
 #
 # Main knobs to change:
 #   model / model_reasoning_effort
@@ -13,7 +13,7 @@
 #   ~/.codex/config.toml
 
 # Root / orchestrator
-model = "gpt-6-astra"
+model = "gpt-5.6-sol"
 model_reasoning_effort = "medium"
 
 # Safe interactive defaults. Change if your workflow needs otherwise.

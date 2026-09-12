@@ -62,7 +62,7 @@ If you want numbers that are comparable across configurations:
    fix, a multi-file feature, a cross-component bug, and a research-heavy
    change. Write the prompts down and reuse them verbatim.
 2. Run each task in at least two configurations:
-   - Baseline: Astra root only, `[agents] enabled = false`, no skill.
+   - Baseline: Sol root only, `[agents] enabled = false`, no skill.
    - Orchestrated: the selected Pro or Plus profile as installed.
    - Optional floor: Luna root only, to see the cheapest possible run.
 3. Record for every run: per-model uncached input, cached input, output and
@@ -70,14 +70,14 @@ If you want numbers that are comparable across configurations:
    in 5-hour and 7-day `used_percent`.
 4. Repeat each cell two or three times. Variance between runs of the same
    prompt is large enough that a single sample misleads.
-5. Record the profile and any overrides: Pro uses Astra `medium` with Luna
-   `max`; Plus uses Luna `max` with Luna `medium`. Both use an Astra `low`
+5. Record the profile and any overrides: Pro uses Sol `medium` with Luna
+   `max`; Plus uses Luna `max` with Luna `medium`. Both use a Sol `low`
    reviewer. Note the Codex version. Caching behaviour and subagent context handling
    change between releases.
 
 Suggested results table:
 
-| Task | Config | Astra uncached / cached / out | Luna uncached / cached / out | Subagents | Wall | 5h delta | 7d delta |
+| Task | Config | Sol uncached / cached / out | Luna uncached / cached / out | Subagents | Wall | 5h delta | 7d delta |
 |---|---|---|---|---:|---:|---:|---:|
 
 ## Reading the numbers
@@ -161,13 +161,13 @@ In rough order of impact:
   ```
 
 - Do not orchestrate small tasks. The skill's delegation gate already says
-  this; enforce it by not invoking `$astra-orchestrator` for one-file edits.
+  this; enforce it by not invoking `$sol-orchestrator` for one-file edits.
 - Keep `max_concurrent_threads_per_session` low. Each extra concurrent
   subagent is a second full context being re-read on every response.
 - Ask subagents for short reports. The skill's "cost and context discipline"
   section exists because raw logs pasted into the root are re-read by the
   root on every subsequent response.
-- Skip the reviewer for low-risk changes. It is Astra, and it re-reads the
+- Skip the reviewer for low-risk changes. It is Sol, and it re-reads the
   diff and surrounding context.
 - Lower Luna to `low` reasoning for explorer and tester roles; output and
   reasoning tokens are a small share of the total, so this mainly shortens

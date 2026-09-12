@@ -1,28 +1,27 @@
-# Pro Profile: Astra + Luna Orchestration
+# Pro Profile: Sol + Luna Orchestration
 
-Choose this preset when you want Astra to plan, orchestrate, and review while
+Choose this preset when you want Sol to plan, orchestrate, and review while
 Luna handles the execution roles. Select Pro in `setup.sh` or `setup.ps1`.
-Setup copies `profiles/pro/codex/` to `.codex/` and
-`profiles/pro/agents/` to `.agents/` in the target repository without
-rewriting configuration. For manual installation, copy those same folders
-and the repository's `AGENTS.md` to the target.
+Personal/global setup merges this profile into the user's existing Codex
+configuration. Project setup copies `profiles/pro/codex/` to `.codex/` and
+`profiles/pro/agents/` to `.agents/` in the target repository.
 
 The topology is:
 
 ```text
-Astra root (medium)
+Sol root (medium)
 ├── Luna explorer (max)
 ├── Luna worker (max)
 ├── Luna tester (max)
 ├── Luna researcher (max)
-└── Astra reviewer (low)
+└── Sol reviewer (low)
 ```
 
 Put the root settings in the project-scoped `.codex/config.toml`, or merge
 them into `~/.codex/config.toml` for a personal/global setup:
 
 ```toml
-model = "gpt-6-astra"
+model = "gpt-5.6-sol"
 model_reasoning_effort = "medium"
 
 [agents]
@@ -43,7 +42,7 @@ model_reasoning_effort = "max"
 
 ```toml
 # reviewer.toml
-model = "gpt-6-astra"
+model = "gpt-5.6-sol"
 model_reasoning_effort = "low"
 ```
 
